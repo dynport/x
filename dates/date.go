@@ -30,6 +30,10 @@ func NextMonth(d time.Time) time.Time {
 	}
 }
 
+func Between(toTest, start, end time.Time) bool {
+	return !toTest.Before(start) && !toTest.After(end)
+}
+
 func Range(start, end time.Time) (list Times) {
 	c := Day(start)
 	end = Day(end)

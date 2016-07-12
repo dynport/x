@@ -5,6 +5,29 @@ import (
 	"time"
 )
 
+func TestBetween(t *testing.T) {
+	ref := time.Date(2006, 2, 3, 15, 4, 5, 0, time.UTC)
+
+	tests := []struct {
+		Start time.Time
+		End   time.Time
+		Want  bool
+	}{
+		{New(2006, 2, 3), New(2006, 2, 4), true},
+		{ref, ref, true},
+		{ref.Add(-1 * time.Second), ref, true},
+		{ref.Add(-1 * time.Second), ref.Add(1 * time.Second), true},
+		{ref.Add(1 * time.Second), ref, false},
+		{ref, ref.Add(-1 * time.Second), false},
+	}
+	for i, tc := range tests {
+		has := Between(ref, tc.Start, tc.End)
+		if has != tc.Want {
+			t.Errorf("%d: expected Between for %s and %s to be %t, was %t", i+1, tc.Start, tc.End, tc.Want, has)
+		}
+	}
+}
+
 func TestPrevMonth(t *testing.T) {
 	tests := []struct{ Input, Want time.Time }{
 		{New(2006, 1, 1), New(2005, 12, 1)},
