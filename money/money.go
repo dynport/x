@@ -1,6 +1,9 @@
 package money
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
 	EUR = "EUR"
@@ -42,7 +45,11 @@ func (m *Money) ToEUR() *Money {
 }
 
 func New(amountInCents int, currency string) *Money {
-	return &Money{AmountInCents: amountInCents, Currency: currency}
+	return &Money{AmountInCents: amountInCents, Currency: strings.ToUpper(currency)}
+}
+
+func NewEUR(amountInCents int) *Money {
+	return New(amountInCents, EUR)
 }
 
 func (m *Money) String() string {
