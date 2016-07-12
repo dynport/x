@@ -22,7 +22,10 @@ type Money struct {
 
 func (m *Money) Add(other *Money) *Money {
 	return &Money{AmountInCents: m.ToEUR().AmountInCents + other.ToEUR().AmountInCents, Currency: EUR}
+}
 
+func (m *Money) Sub(other *Money) *Money {
+	return &Money{AmountInCents: m.ToEUR().AmountInCents - other.ToEUR().AmountInCents, Currency: EUR}
 }
 
 func (m *Money) AmountInEURCents() int {
