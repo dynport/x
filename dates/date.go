@@ -14,6 +14,14 @@ func EndOfMonth(d time.Time) time.Time {
 	return Day(NextMonth(d).Add(-1 * time.Hour))
 }
 
+func PrevMonth(d time.Time) time.Time {
+	if d.Month() == 1 {
+		return New(d.Year()-1, 12, 1)
+	} else {
+		return New(d.Year(), int(d.Month()-1), 1)
+	}
+}
+
 func NextMonth(d time.Time) time.Time {
 	if d.Month() == 12 {
 		return New(d.Year()+1, 1, 1)
