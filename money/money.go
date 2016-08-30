@@ -21,6 +21,9 @@ type Money struct {
 }
 
 func (m *Money) Add(other *Money) *Money {
+	if other == nil {
+		return m
+	}
 	return &Money{AmountInCents: m.ToEUR().AmountInCents + other.ToEUR().AmountInCents, Currency: EUR}
 }
 
@@ -34,6 +37,14 @@ func (m *Money) AmountInEURCents() int {
 		panic("currency " + m.Currency + " not supported")
 	}
 	return int(float64(m.AmountInCents) * factor)
+}
+
+func (m *Money) Abs() *Money {
+	amount := m.AmountInCents
+	if amount < 0 {
+		amount = -1 * amount
+	}
+	return &Money{AmountInCents: amount, Currency: m.Currency}
 }
 
 func (m *Money) PerDays(n int) *Money {
