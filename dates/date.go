@@ -28,6 +28,10 @@ func DayBefore(t time.Time) time.Time {
 	return t.UTC().Add(-24 * time.Hour).Truncate(oneDay)
 }
 
+func DayAfter(t time.Time) time.Time {
+	return t.UTC().Add(oneDay).Truncate(oneDay)
+}
+
 func NextMonth(d time.Time) time.Time {
 	if d.Month() == 12 {
 		return New(d.Year()+1, 1, 1)
