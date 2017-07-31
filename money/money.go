@@ -3,6 +3,7 @@ package money
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
 
 const (
@@ -10,9 +11,24 @@ const (
 	USD = "USD"
 )
 
-var Currencies = map[string]float64{
+var currenciesMux = &sync.Mutex{}
+
+func SetCurrencies(new map[string]float64) {
+	currenciesMux.Lock()
+	defer currenciesMux.Unlock()
+	exchangeRates = new
+}
+
+func ExchangeRates() map[string]float64 {
+	currenciesMux.Lock()
+	defer currenciesMux.Unlock()
+	return exchangeRates
+}
+
+var exchangeRates = map[string]float64{
 	EUR: 1.0, // default currency is EUR
-	USD: 0.902730761,
+	//USD: 0.902730761,
+	USD: 0.8526,
 }
 
 type Money struct {
@@ -31,12 +47,16 @@ func (m *Money) Sub(other *Money) *Money {
 	return &Money{AmountInCents: m.ToEUR().AmountInCents - other.ToEUR().AmountInCents, Currency: EUR}
 }
 
-func (m *Money) AmountInEURCents() int {
-	factor, ok := Currencies[m.Currency]
+func (m *Money) AmountInEURCentsWithRates(rates map[string]float64) int {
+	factor, ok := rates[m.Currency]
 	if !ok {
 		panic("currency " + m.Currency + " not supported")
 	}
 	return int(float64(m.AmountInCents) * factor)
+}
+
+func (m *Money) AmountInEURCents() int {
+	return m.AmountInEURCentsWithRates(ExchangeRates())
 }
 
 func (m *Money) Abs() *Money {
